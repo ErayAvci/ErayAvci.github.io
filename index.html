@@ -1,96 +1,795 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eray Avcı - Uygulamalar</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        .app-card {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            background: #fff;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .app-card img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-        .app-info {
-            padding: 15px;
-        }
-        .app-info h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #007bff;
-        }
-        .app-info p {
-            margin: 5px 0;
-            font-size: 14px;
-            color: #555;
-        }
-        .app-info a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .app-info a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d12">
+  <meta name="description" content="Eray Avcı tarafından geliştirilen Android oyunları, fizik simülasyonları ve grafik deneyimleri.">
+  <meta property="og:title" content="Eray Avcı — Indie Game Developer">
+  <meta property="og:description" content="Oyunlar, gerçek zamanlı fizik simülasyonları ve dijital deneyimler.">
+  <meta property="og:type" content="website">
+  <title>Eray Avcı — Indie Game Developer</title>
+  <style>
+    :root {
+      --bg: #090d12;
+      --bg-2: #0d131b;
+      --panel: #111923;
+      --panel-2: #151f2b;
+      --line: rgba(205, 221, 235, .12);
+      --text: #f2f5f7;
+      --muted: #9ba9b5;
+      --soft: #c4ced5;
+      --lime: #c1f36b;
+      --cyan: #77d8d0;
+      --violet: #a99bfa;
+      --radius: 22px;
+      --max: 1240px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      margin: 0; color: var(--text); background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55; overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 12% 5%, rgba(83, 145, 135, .16), transparent 34rem),
+        radial-gradient(ellipse at 90% 19%, rgba(105, 92, 173, .13), transparent 34rem),
+        linear-gradient(180deg, #0a0f15 0%, #090d12 60%, #0b1118 100%);
+    }
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .14;
+      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 54px 54px; mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+    .wrap { width: min(var(--max), calc(100% - 48px)); margin-inline: auto; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 30; border-bottom: 1px solid rgba(214,229,242,.08);
+      background: rgba(9,13,18,.78); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 25px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; min-width: max-content; }
+    .brand-mark {
+      display: grid; place-items: center; width: 43px; height: 43px; border-radius: 14px;
+      color: #11170b; font-size: 14px; font-weight: 950; letter-spacing: -.08em;
+      background: linear-gradient(145deg, #d1ff82, #8adfbe); box-shadow: 0 7px 28px rgba(193,243,107,.17);
+    }
+    .brand-name { display: block; font-size: 14px; line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+    .brand-sub { display: block; margin-top: 5px; color: #81909c; font-size: 9px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 30px; align-items: center; color: #aab7c1; font-size: 12px; font-weight: 650; }
+    .nav-links a { transition: color .2s ease; } .nav-links a:hover { color: var(--lime); }
+    .nav-button { display: inline-flex; align-items: center; gap: 12px; padding: 11px 17px; border: 1px solid rgba(193,243,107,.3); border-radius: 999px; color: var(--lime); background: rgba(193,243,107,.07); font-size: 11px; font-weight: 800; transition: .2s ease; }
+    .nav-button:hover { background: var(--lime); color: #151b0d; transform: translateY(-2px); }
+
+    .hero { position: relative; padding: 92px 0 68px; }
+    .hero-grid { display: grid; grid-template-columns: 1.04fr .96fr; align-items: center; gap: 60px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 24px; color: var(--lime); font-size: 10px; font-weight: 850; letter-spacing: .19em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 25px; height: 1px; background: var(--lime); }
+    h1 { max-width: 690px; margin: 0; font-size: clamp(45px, 6.4vw, 82px); font-weight: 850; line-height: .99; letter-spacing: -.075em; }
+    h1 .accent { color: var(--lime); }
+    .hero-copy { max-width: 530px; margin: 27px 0 31px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 11px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; padding: 0 20px; border: 1px solid transparent; border-radius: 999px; background: var(--lime); color: #11170b; font-size: 12px; font-weight: 850; transition: transform .2s ease, box-shadow .2s ease; }
+    .button:hover { transform: translateY(-3px); box-shadow: 0 13px 30px rgba(193,243,107,.18); }
+    .button-quiet { color: var(--soft); background: rgba(255,255,255,.035); border-color: var(--line); }
+    .button-quiet:hover { color: var(--lime); background: rgba(255,255,255,.07); box-shadow: none; }
+    .hero-footnote { display: flex; align-items: center; gap: 12px; margin-top: 30px; color: #84939f; font-size: 10px; letter-spacing: .04em; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 5px rgba(193,243,107,.09); }
+
+    .hero-stage { position: relative; min-height: 430px; display: grid; place-items: center; isolation: isolate; }
+    .stage-glow { position: absolute; width: 390px; height: 390px; border-radius: 50%; z-index: -1; background: radial-gradient(circle, rgba(111,200,177,.18), rgba(100,102,171,.09) 46%, transparent 70%); filter: blur(9px); }
+    .stage-orbit { position: absolute; width: 350px; height: 350px; border: 1px solid rgba(177,208,210,.12); border-radius: 50%; transform: rotate(-24deg) scaleY(.56); }
+    .stage-orbit::before, .stage-orbit::after { content: ""; position: absolute; inset: 29px; border: 1px solid rgba(177,208,210,.09); border-radius: 50%; }
+    .stage-orbit::after { inset: -25px; border-style: dashed; opacity: .55; }
+    .hero-feature { position: relative; width: min(310px, 73%); padding: 13px; border: 1px solid rgba(200,226,232,.18); border-radius: 26px; background: linear-gradient(145deg, rgba(28,42,51,.96), rgba(12,19,26,.96)); box-shadow: 0 35px 90px rgba(0,0,0,.48); transform: rotate(-5deg); }
+    .hero-feature-image { position: relative; overflow: hidden; border-radius: 17px; aspect-ratio: 1; background: #17242b; }
+    .hero-feature-image img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .hero-feature-image::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.38)); pointer-events: none; }
+    .hero-feature-info { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 3px 4px; }
+    .hero-feature-info strong { display: block; font-size: 14px; line-height: 1.3; }
+    .hero-feature-info small { display: block; margin-top: 4px; color: #8797a3; font-size: 10px; }
+    .feature-arrow { color: var(--lime); font-size: 25px; }
+    .mini-float { position: absolute; display: flex; align-items: center; gap: 10px; padding: 10px 13px 10px 10px; border: 1px solid rgba(199,222,230,.16); border-radius: 16px; background: rgba(16,25,34,.92); box-shadow: 0 14px 40px rgba(0,0,0,.34); backdrop-filter: blur(15px); }
+    .mini-float img { width: 42px; height: 42px; border-radius: 11px; object-fit: cover; }
+    .mini-float strong { display: block; max-width: 145px; font-size: 10px; line-height: 1.3; }
+    .mini-float small { display: block; margin-top: 3px; color: #8797a3; font-size: 9px; }
+    .float-a { top: 43px; right: -2px; transform: rotate(4deg); }
+    .float-b { bottom: 44px; left: -3px; transform: rotate(3deg); }
+
+    .metrics { padding: 0 0 30px; }
+    .metric-row { display: grid; grid-template-columns: repeat(3,1fr); overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); }
+    .metric { padding: 19px 26px; }
+    .metric + .metric { border-left: 1px solid var(--line); }
+    .metric strong { display: block; font-size: 23px; line-height: 1.2; font-weight: 850; letter-spacing: -.05em; }
+    .metric span { display: block; margin-top: 5px; color: #8796a1; font-size: 10px; }
+
+    section.section { padding: 74px 0; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 29px; }
+    .section-kicker { color: var(--lime); font-size: 9px; font-weight: 850; letter-spacing: .19em; text-transform: uppercase; }
+    h2 { margin: 8px 0 0; font-size: clamp(31px, 4.4vw, 49px); line-height: 1.07; letter-spacing: -.065em; }
+    .section-description { max-width: 420px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+
+    .spotlight-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; }
+    .spotlight { position: relative; display: flex; align-items: center; gap: 13px; min-width: 0; padding: 15px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(23,34,45,.92), rgba(14,21,29,.92)); transition: border-color .2s ease, transform .2s ease; }
+    .spotlight:hover { transform: translateY(-4px); border-color: rgba(193,243,107,.35); }
+    .spotlight img { width: 58px; height: 58px; flex: 0 0 58px; border-radius: 15px; object-fit: cover; background: #18232e; }
+    .spotlight strong { display: block; font-size: 11px; line-height: 1.4; }
+    .spotlight small { display: block; margin-top: 5px; color: #8d9aa5; font-size: 9px; }
+    .spotlight-arrow { margin-left: auto; padding-left: 4px; color: var(--lime); font-size: 16px; }
+
+    .library-section { padding-top: 62px !important; }
+    .library-top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 23px; }
+    .library-note { color: var(--muted); font-size: 11px; }
+    .library-tools { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 25px 0 21px; }
+    .filter-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .filter-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 37px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px; color: #aab7c2; background: rgba(255,255,255,.025); cursor: pointer; font-size: 10px; font-weight: 750; transition: all .18s ease; }
+    .filter-btn em { display: inline-grid; place-items: center; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 99px; color: #81909b; background: rgba(255,255,255,.06); font-size: 9px; font-style: normal; }
+    .filter-btn:hover { color: var(--text); border-color: rgba(193,243,107,.34); }
+    .filter-btn.active { color: #13190c; border-color: var(--lime); background: var(--lime); }
+    .filter-btn.active em { color: #222c12; background: rgba(20,30,8,.12); }
+    .search-wrap { position: relative; width: min(300px,100%); }
+    .search-wrap svg { position: absolute; top: 50%; left: 14px; width: 15px; height: 15px; transform: translateY(-50%); stroke: #85939e; }
+    .search { width: 100%; min-height: 40px; padding: 0 14px 0 39px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); background: rgba(255,255,255,.035); outline: none; font-size: 11px; transition: border .2s ease, background .2s ease; }
+    .search::placeholder { color: #74828e; } .search:focus { border-color: rgba(193,243,107,.55); background: rgba(255,255,255,.055); }
+    .results-line { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 13px; color: #798894; font-size: 10px; }
+    .results-line strong { color: #d0d8de; font-weight: 750; }
+    .app-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .app-card { position: relative; min-width: 0; padding: 17px 17px 13px; border: 1px solid rgba(204,222,235,.105); border-radius: 21px; background: linear-gradient(145deg, rgba(19,29,39,.94), rgba(13,20,28,.94)); box-shadow: 0 12px 30px rgba(0,0,0,.10); transition: transform .24s ease, border-color .24s ease, background .24s ease, box-shadow .24s ease; }
+    .app-card:hover { transform: translateY(-5px); border-color: rgba(193,243,107,.38); background: linear-gradient(145deg, rgba(24,38,49,.98), rgba(14,22,31,.98)); box-shadow: 0 19px 42px rgba(0,0,0,.24); }
+    .app-card[hidden] { display: none !important; }
+    .card-main { display: flex; align-items: flex-start; gap: 14px; min-height: 112px; }
+    .app-icon { position: relative; display: grid; place-items: center; flex: 0 0 72px; width: 72px; height: 72px; overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 19px; background: linear-gradient(145deg, #253b43, #293047); box-shadow: 0 8px 22px rgba(0,0,0,.25); }
+    .app-icon img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .app-icon.no-image::after { content: attr(data-fallback); color: var(--lime); font-size: 17px; font-weight: 900; letter-spacing: -.05em; }
+    .app-card-text { min-width: 0; flex: 1; }
+    .card-topline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 7px; }
+    .card-category { color: var(--lime); font-size: 8px; font-weight: 850; letter-spacing: .13em; }
+    .card-category.simulation { color: var(--cyan); } .card-category.app { color: var(--violet); }
+    .card-tag { padding: 3px 6px; border: 1px solid rgba(255,255,255,.07); border-radius: 5px; color: #8b99a4; font-size: 7px; font-weight: 800; letter-spacing: .07em; }
+    .app-card h3 { margin: 0; color: #f0f4f6; font-size: 12px; line-height: 1.45; letter-spacing: -.025em; }
+    .app-card p { margin: 7px 0 0; color: #8997a2; font-size: 10px; line-height: 1.55; }
+    .card-open { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 9px; padding-top: 10px; border-top: 1px solid rgba(204,222,235,.075); color: #c5d0d7; font-size: 9px; font-weight: 750; }
+    .card-open b { color: var(--lime); font-size: 14px; font-weight: 600; transition: transform .18s ease; }
+    .app-card:hover .card-open b { transform: translate(2px,-2px); }
+    .empty-state { display: none; padding: 48px 20px; border: 1px dashed var(--line); border-radius: 18px; color: var(--muted); text-align: center; font-size: 12px; }
+    .empty-state.show { display: block; }
+
+    .about { padding-top: 76px !important; }
+    .about-panel { display: grid; grid-template-columns: .75fr 1.25fr; align-items: center; gap: 40px; padding: clamp(26px,5vw,52px); border: 1px solid var(--line); border-radius: 26px; background: radial-gradient(ellipse at 0 0, rgba(119,216,208,.08), transparent 22rem), rgba(17,25,35,.86); }
+    .about-art { position: relative; display: grid; place-items: center; min-height: 210px; overflow: hidden; border: 1px solid rgba(119,216,208,.17); border-radius: 20px; background: linear-gradient(145deg, rgba(119,216,208,.09), rgba(169,155,250,.07)); }
+    .about-art::before, .about-art::after { content: ""; position: absolute; width: 210px; height: 210px; border: 1px solid rgba(193,243,107,.18); border-radius: 50%; transform: scaleY(.45) rotate(30deg); }
+    .about-art::after { width: 160px; height: 160px; transform: scaleY(.45) rotate(-25deg); border-color: rgba(119,216,208,.23); }
+    .about-art span { position: relative; z-index: 1; color: rgba(193,243,107,.86); font-size: 83px; font-weight: 950; letter-spacing: -.1em; text-shadow: 0 12px 40px rgba(193,243,107,.13); }
+    .about-panel p { max-width: 650px; margin: 17px 0 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
+    .about-tags span { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; color: #b5c2cb; font-size: 9px; }
+
+    .contact { padding: 72px 0 86px; }
+    .contact-panel { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: clamp(25px,5vw,44px); border: 1px solid rgba(193,243,107,.22); border-radius: 25px; background: linear-gradient(110deg, rgba(46,70,52,.34), rgba(31,44,62,.48)); }
+    .contact-panel p { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+    footer { padding: 22px 0; border-top: 1px solid var(--line); color: #788793; font-size: 10px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 19px; } .footer-links a:hover { color: var(--lime); }
+
+    @media (max-width: 1080px) {
+      .hero-grid { gap: 28px; } .spotlight-grid { grid-template-columns: repeat(2,1fr); } .app-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 720px) {
+      .wrap { width: min(100% - 30px, var(--max)); }
+      .nav { min-height: 68px; } .nav-links { display: none; } .nav-button { min-height: 39px; padding: 0 13px; font-size: 10px; }
+      .hero { padding: 62px 0 48px; } .hero-grid { grid-template-columns: 1fr; gap: 24px; } h1 { font-size: clamp(43px, 13vw, 66px); } .hero-copy { font-size: 14px; }
+      .hero-stage { min-height: 355px; } .stage-glow { width: 290px; height: 290px; } .stage-orbit { width: 280px; height: 280px; } .hero-feature { width: 230px; } .float-a { top: 7px; right: 0; } .float-b { bottom: 11px; left: 0; }
+      .metric-row { grid-template-columns: 1fr; } .metric { padding: 15px 19px; } .metric + .metric { border-left: 0; border-top: 1px solid var(--line); } .metric strong { font-size: 19px; }
+      section.section { padding: 55px 0; } .section-heading { display: block; } .section-description { margin-top: 12px; } .spotlight-grid { gap: 9px; } .spotlight { padding: 11px; gap: 9px; } .spotlight img { width: 48px; height: 48px; flex-basis: 48px; border-radius: 12px; } .spotlight strong { font-size: 10px; }
+      .library-tools { align-items: stretch; flex-direction: column; } .search-wrap { width: 100%; } .filter-list { gap: 6px; } .filter-btn { min-height: 34px; padding: 0 10px; font-size: 9px; } .app-grid { grid-template-columns: 1fr; gap: 9px; } .app-card { padding: 13px 13px 10px; } .card-main { min-height: 84px; } .app-icon { width: 60px; height: 60px; flex-basis: 60px; border-radius: 15px; } .app-card h3 { font-size: 12px; } .app-card p { font-size: 10px; }
+      .about-panel { grid-template-columns: 1fr; gap: 22px; } .about-art { min-height: 145px; } .about-art span { font-size: 65px; } .contact-panel { align-items: flex-start; flex-direction: column; } .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 390px) { .spotlight-grid { grid-template-columns: 1fr; } .brand-sub { letter-spacing: .11em; } .brand-mark { width: 39px; height: 39px; } }
+    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Eray Avcı - Google Play Uygulamaları</h1>
-    </header>
-    <div class="container">
-        <div class="app-card">
-            <img src="https://via.placeholder.com/100" alt="App Logo">
-            <div class="app-info">
-                <h3>Uygulama 1</h3>
-                <p>Kısa açıklama: Bu uygulama, ...</p>
-                <a href="https://play.google.com/store/apps/details?id=com.example.app1" target="_blank">Detayları Gör</a>
-            </div>
-        </div>
-        <div class="app-card">
-            <img src="https://via.placeholder.com/100" alt="App Logo">
-            <div class="app-info">
-                <h3>Uygulama 2</h3>
-                <p>Kısa açıklama: Bu uygulama, ...</p>
-                <a href="https://play.google.com/store/apps/details?id=com.example.app2" target="_blank">Detayları Gör</a>
-            </div>
-        </div>
-        <!-- Yeni uygulamalar buraya eklenebilir -->
-        <div class="app-card">
-            <img src="https://via.placeholder.com/100" alt="App Logo">
-            <div class="app-info">
-                <h3>Diğer Uygulamalar</h3>
-                <p>Tüm uygulamalarımızı görmek için aşağıdaki linke tıklayın:</p>
-                <a href="https://play.google.com/store/apps/dev?id=6424570969147373272" target="_blank">Google Play Store'da Gör</a>
-            </div>
-        </div>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Eray Avcı ana sayfa">
+        <span class="brand-mark">EA</span>
+        <span><span class="brand-name">Eray Avcı</span><span class="brand-sub">Independent Developer</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Ana menü">
+        <a href="#spotlight">Öne çıkanlar</a><a href="#projects">Projeler</a><a href="#about">Hakkımda</a>
+      </nav>
+      <a class="nav-button" href="https://play.google.com/store/apps/dev?id=6424570969147373272" target="_blank" rel="noopener noreferrer">Google Play <span aria-hidden="true">↗</span></a>
     </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Bağımsız oyun geliştiricisi</div>
+          <h1>Fizik ve hayal gücüyle <span class="accent">yeni dünyalar.</span></h1>
+          <p class="hero-copy">Android için oyunlar, gerçek zamanlı fizik simülasyonları ve grafik deneyimleri geliştiriyorum. Futbol sahalarından okyanuslara, küçük deneylerden etkileşimli dünyalara kadar projelerimi keşfet.</p>
+          <div class="hero-actions">
+            <a class="button" href="#projects">Tüm projeleri keşfet <span aria-hidden="true">↓</span></a>
+            <a class="button button-quiet" href="https://play.google.com/store/apps/dev?id=6424570969147373272" target="_blank" rel="noopener noreferrer">Google Play profilim <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-footnote"><span class="live-dot"></span><span>Unity · Android · Physics · Real-time Graphics</span></div>
+        </div>
+        <div class="hero-stage" aria-label="Öne çıkan oyunlar">
+          <div class="stage-glow"></div><div class="stage-orbit"></div>
+          <a class="hero-feature" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreekicker3" target="_blank" rel="noopener noreferrer">
+            <div class="hero-feature-image"><img src="https://play-lh.googleusercontent.com/8xXPFeZUHTOvx9ZHHXrKqokOkRu6qRKBrmcdSxyjT8hvEmF-QXLVUN0gC56joqjxXl0yU_f4HCjomz6CnnG4%3Dw240-h480" alt="Crazy Freekicker 3 oyun simgesi"></div>
+            <div class="hero-feature-info"><div><strong>Crazy Freekicker 3</strong><small>Physics based football</small></div><span class="feature-arrow">↗</span></div>
+          </a>
+          <a class="mini-float float-a" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation3" target="_blank" rel="noopener noreferrer">
+            <img src="https://play-lh.googleusercontent.com/_trC9ASU2a5YgEs3v0gfqD-qO6DFZs2FE4QlxLvkJ6YupZh6aIvJeMsCkmpJc8HwUrlbAWN05N6POKsEqAFqWA%3Dw240-h480" alt=""><span><strong>Ocean Waves Simulation 3</strong><small>Real-time ocean physics</small></span>
+          </a>
+          <a class="mini-float float-b" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ArcherCastleTowerDefense" target="_blank" rel="noopener noreferrer">
+            <img src="https://play-lh.googleusercontent.com/ZnMticptql5xp-6yB8cL1CKNawAwwv8NH3hhYqA0_L7Vley0DHZV6hvaADX8fKsSPcL9j3RJgoYzltxEgwuj%3Dw240-h480" alt=""><span><strong>Elves vs Orcs</strong><small>Strategy · Tower defense</small></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="Geliştirici bilgileri">
+      <div class="wrap metric-row">
+        <div class="metric"><strong>40+</strong><span>Google Play projesi</span></div>
+        <div class="metric"><strong>500K+</strong><span>Crazy Freekicker indirmesi</span></div>
+        <div class="metric"><strong>Unity</strong><span>Oyun motoru · Fizik · Grafik programlama</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="spotlight">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><div class="section-kicker">Seçilmiş projeler</div><h2>Öne çıkanlar</h2></div>
+          <p class="section-description">Farklı türlerde oyunlar ve simülasyonlar. Her kart seni doğrudan ilgili Google Play sayfasına götürür.</p>
+        </div>
+        <div class="spotlight-grid">
+          <a class="spotlight" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreekicker3" target="_blank" rel="noopener noreferrer"><img src="https://play-lh.googleusercontent.com/8xXPFeZUHTOvx9ZHHXrKqokOkRu6qRKBrmcdSxyjT8hvEmF-QXLVUN0gC56joqjxXl0yU_f4HCjomz6CnnG4%3Dw240-h480" alt=""><span><strong>Crazy Freekicker 3</strong><small>Fizik tabanlı futbol</small></span><span class="spotlight-arrow">↗</span></a>
+          <a class="spotlight" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ArcherCastleTowerDefense" target="_blank" rel="noopener noreferrer"><img src="https://play-lh.googleusercontent.com/ZnMticptql5xp-6yB8cL1CKNawAwwv8NH3hhYqA0_L7Vley0DHZV6hvaADX8fKsSPcL9j3RJgoYzltxEgwuj%3Dw240-h480" alt=""><span><strong>Elves vs Orcs</strong><small>Kule savunma</small></span><span class="spotlight-arrow">↗</span></a>
+          <a class="spotlight" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation3" target="_blank" rel="noopener noreferrer"><img src="https://play-lh.googleusercontent.com/_trC9ASU2a5YgEs3v0gfqD-qO6DFZs2FE4QlxLvkJ6YupZh6aIvJeMsCkmpJc8HwUrlbAWN05N6POKsEqAFqWA%3Dw240-h480" alt=""><span><strong>Ocean Waves Simulation 3</strong><small>Okyanus simülasyonu</small></span><span class="spotlight-arrow">↗</span></a>
+          <a class="spotlight" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RelaxingNature3DJourney" target="_blank" rel="noopener noreferrer"><img src="https://play-lh.googleusercontent.com/RgG4f9RVE4lkBug1BgtX1v7SXDFj0jSJ__ma0rvmpkc5kEWU5_XVWA9oQwFqEhE8K5U1u6l0UoMrxNtQUnXmBDE%3Dw240-h480" alt=""><span><strong>Relaxing Nature Journey</strong><small>Doğa keşfi</small></span><span class="spotlight-arrow">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section library-section" id="projects">
+      <div class="wrap">
+        <div class="library-top">
+          <div><div class="section-kicker">Proje arşivi</div><h2>Tüm oyunlar ve uygulamalar</h2></div>
+          <p class="library-note">Oyunlar, simülasyonlar ve geliştirici araçları · 40 proje</p>
+        </div>
+        <div class="library-tools">
+          <div class="filter-list" role="group" aria-label="Kategori filtresi">
+            <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">Tümü <em>40</em></button>
+            <button class="filter-btn" type="button" data-filter="game" aria-pressed="false">Oyunlar <em>14</em></button>
+            <button class="filter-btn" type="button" data-filter="simulation" aria-pressed="false">Simülasyonlar <em>25</em></button>
+            <button class="filter-btn" type="button" data-filter="app" aria-pressed="false">Uygulamalar <em>1</em></button>
+          </div>
+          <label class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+            <input class="search" id="projectSearch" type="search" placeholder="Proje ara..." autocomplete="off" aria-label="Projelerde ara">
+          </label>
+        </div>
+        <div class="results-line"><span id="resultCount">40 proje gösteriliyor</span><span>Google Play kataloğundaki tüm projeler</span></div>
+        <div class="app-grid" id="appGrid">
+          <article class="app-card" data-category="game" data-search="elves vs orcs elf okçularını yönet, kaleni orc dalgalarına karşı savun. strateji̇">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ArcherCastleTowerDefense" target="_blank" rel="noopener noreferrer" aria-label="Elves vs Orcs Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="EVO"><img src="https://play-lh.googleusercontent.com/ZnMticptql5xp-6yB8cL1CKNawAwwv8NH3hhYqA0_L7Vley0DHZV6hvaADX8fKsSPcL9j3RJgoYzltxEgwuj%3Dw240-h480" alt="Elves vs Orcs uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">STRATEJİ</span></div>
+      <h3>Elves vs Orcs</h3>
+      <p>Elf okçularını yönet, kaleni orc dalgalarına karşı savun.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ArcherCastleTowerDefense" target="_blank" rel="noopener noreferrer" aria-label="Elves vs Orcs için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="crazy freekicker 3 magnus etkisi, falsolu şutlar ve fizik tabanlı kaleci. futbol">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreekicker3" target="_blank" rel="noopener noreferrer" aria-label="Crazy Freekicker 3 Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CF3"><img src="https://play-lh.googleusercontent.com/8xXPFeZUHTOvx9ZHHXrKqokOkRu6qRKBrmcdSxyjT8hvEmF-QXLVUN0gC56joqjxXl0yU_f4HCjomz6CnnG4%3Dw240-h480" alt="Crazy Freekicker 3 uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">FUTBOL</span></div>
+      <h3>Crazy Freekicker 3</h3>
+      <p>Magnus etkisi, falsolu şutlar ve fizik tabanlı kaleci.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreekicker3" target="_blank" rel="noopener noreferrer" aria-label="Crazy Freekicker 3 için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="ocean waves simulation 3 fft tabanlı gerçek zamanlı okyanus dalgaları ve sakin deniz atmosferi. okyanus">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation3" target="_blank" rel="noopener noreferrer" aria-label="Ocean Waves Simulation 3 Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="OWS"><img src="https://play-lh.googleusercontent.com/_trC9ASU2a5YgEs3v0gfqD-qO6DFZs2FE4QlxLvkJ6YupZh6aIvJeMsCkmpJc8HwUrlbAWN05N6POKsEqAFqWA%3Dw240-h480" alt="Ocean Waves Simulation 3 uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">OKYANUS</span></div>
+      <h3>Ocean Waves Simulation 3</h3>
+      <p>FFT tabanlı gerçek zamanlı okyanus dalgaları ve sakin deniz atmosferi.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation3" target="_blank" rel="noopener noreferrer" aria-label="Ocean Waves Simulation 3 için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="relaxing nature forest journey ormanlar, doğa manzaraları, araç sürüşü ve odun kesme deneyimi. doğa">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RelaxingNature3DJourney" target="_blank" rel="noopener noreferrer" aria-label="Relaxing Nature Forest Journey Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="RNF"><img src="https://play-lh.googleusercontent.com/RgG4f9RVE4lkBug1BgtX1v7SXDFj0jSJ__ma0rvmpkc5kEWU5_XVWA9oQwFqEhE8K5U1u6l0UoMrxNtQUnXmBDE%3Dw240-h480" alt="Relaxing Nature Forest Journey uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">DOĞA</span></div>
+      <h3>Relaxing Nature Forest Journey</h3>
+      <p>Ormanlar, doğa manzaraları, araç sürüşü ve odun kesme deneyimi.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RelaxingNature3DJourney" target="_blank" rel="noopener noreferrer" aria-label="Relaxing Nature Forest Journey için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="ocean waves simulation 2 mobil cihazlarda dalga hareketlerini izleyebileceğin okyanus simülasyonu. okyanus">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation2" target="_blank" rel="noopener noreferrer" aria-label="Ocean Waves Simulation 2 Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="OWS"><img src="https://play-lh.googleusercontent.com/aW114lK22MX5xgAVTdzM0khMkh_RvH7ron8wwNfjdz9tPEPuESyVo_K8i24Ufl8bVIkWPGuyqYq8gK5piLau%3Dw240-h480" alt="Ocean Waves Simulation 2 uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">OKYANUS</span></div>
+      <h3>Ocean Waves Simulation 2</h3>
+      <p>Mobil cihazlarda dalga hareketlerini izleyebileceğin okyanus simülasyonu.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation2" target="_blank" rel="noopener noreferrer" aria-label="Ocean Waves Simulation 2 için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="app" data-search="opengl shader code wallpaper vertex ve fragment shader kodla, canlı duvar kâğıtları oluştur. shader">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.simulationisevolution.openglshadercodewallpaper" target="_blank" rel="noopener noreferrer" aria-label="OpenGL Shader Code Wallpaper Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="OSC"><img src="https://play-lh.googleusercontent.com/gwEXTZMUBmTt5npche9KyEPiUhQt3Cf7a3QheJtw_DUHlpV15VGPToHL5fmVd8y44eoovxVC9i-3xvIANCcr1ao%3Dw240-h480" alt="OpenGL Shader Code Wallpaper uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category app">UYGULAMA</span><span class="card-tag">SHADER</span></div>
+      <h3>OpenGL Shader Code Wallpaper</h3>
+      <p>Vertex ve fragment shader kodla, canlı duvar kâğıtları oluştur.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.simulationisevolution.openglshadercodewallpaper" target="_blank" rel="noopener noreferrer" aria-label="OpenGL Shader Code Wallpaper için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="crazy freekicker 2 serbest vuruşlar, top fiziği ve futbol mücadeleleri. futbol">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreekicker2" target="_blank" rel="noopener noreferrer" aria-label="Crazy Freekicker 2 Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CF2"><img src="https://play-lh.googleusercontent.com/P3GAICr-SZuUis9fHpJPO0VIj24YsOROONR7taYmlky2zfNjaZ2l9n8Tut2ajh2piCOJpA6uFf11cI8iXx10vJk%3Dw240-h480" alt="Crazy Freekicker 2 uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">FUTBOL</span></div>
+      <h3>Crazy Freekicker 2</h3>
+      <p>Serbest vuruşlar, top fiziği ve futbol mücadeleleri.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreekicker2" target="_blank" rel="noopener noreferrer" aria-label="Crazy Freekicker 2 için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="savanna safari wildlife animal savanayı ve vahşi yaşam ortamlarını keşfet. doğa">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SavannaSafariWildlifeAnimal" target="_blank" rel="noopener noreferrer" aria-label="Savanna Safari Wildlife Animal Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="SSW"><img src="https://play-lh.googleusercontent.com/YLjWrkEQ51A5_kq3lufLIkJmyBKPFjaqcS6yruW3bTLm86r1Dp4Myn6Z5GVVzTCW0f0qdilPWPUxnYm-9HHZ8Wc%3Dw240-h480" alt="Savanna Safari Wildlife Animal uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">DOĞA</span></div>
+      <h3>Savanna Safari Wildlife Animal</h3>
+      <p>Savanayı ve vahşi yaşam ortamlarını keşfet.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SavannaSafariWildlifeAnimal" target="_blank" rel="noopener noreferrer" aria-label="Savanna Safari Wildlife Animal için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="volumetric responsive smokes gerçek zamanlı volumetrik duman efektlerini keşfet. grafi̇k">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.VolumetricResponsiveSmokes" target="_blank" rel="noopener noreferrer" aria-label="Volumetric Responsive Smokes Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="VRS"><img src="https://play-lh.googleusercontent.com/vrD0VGsMYeinoePc3NoYJY-VCvop12JlfFwEkMmOJvXOom87ufwsDbQYzkXGe_jKanXikuUIq4vCJIY5eEmmrQ%3Dw240-h480" alt="Volumetric Responsive Smokes uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">GRAFİK</span></div>
+      <h3>Volumetric Responsive Smokes</h3>
+      <p>Gerçek zamanlı volumetrik duman efektlerini keşfet.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.VolumetricResponsiveSmokes" target="_blank" rel="noopener noreferrer" aria-label="Volumetric Responsive Smokes için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="hair cutting physics saç telleriyle etkileşim kurabildiğin fizik tabanlı deneyim. fi̇zi̇k">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.HairCuttingPhysics" target="_blank" rel="noopener noreferrer" aria-label="Hair Cutting Physics Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="HCP"><img src="https://play-lh.googleusercontent.com/-omYnHCNPVFHYjJKNht-o1ul-Oc8lopeNYmoK7mjK-uJAkpDyda70-gya3DaS2scjd0vAHtNDPKccnYpzJwXMw%3Dw240-h480" alt="Hair Cutting Physics uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">FİZİK</span></div>
+      <h3>Hair Cutting Physics</h3>
+      <p>Saç telleriyle etkileşim kurabildiğin fizik tabanlı deneyim.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.HairCuttingPhysics" target="_blank" rel="noopener noreferrer" aria-label="Hair Cutting Physics için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="crazy freekicker serinin ilk serbest vuruş oyunu; falsolu şutlarını dene. futbol">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreeKicker" target="_blank" rel="noopener noreferrer" aria-label="Crazy Freekicker Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CF"><img src="https://play-lh.googleusercontent.com/0fz-RE53cCYysiQYY-_CzehqJclyQeth3e9KXc_EMwDnSeDIbn56ll1Ctnug028btobcg-z9e8-8fQ20grYT1g%3Ds52" alt="Crazy Freekicker uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">FUTBOL</span></div>
+      <h3>Crazy Freekicker</h3>
+      <p>Serinin ilk serbest vuruş oyunu; falsolu şutlarını dene.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFreeKicker" target="_blank" rel="noopener noreferrer" aria-label="Crazy Freekicker için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="ocean waves simulation okyanus dalgaları ve gemiler için yüzdürme fiziği. okyanus">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation" target="_blank" rel="noopener noreferrer" aria-label="Ocean Waves Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="OWS"><img src="https://play-lh.googleusercontent.com/BbupsYSnIiDcToREKLl4orL8RrVk_lWGmd-ELR-CDdUo14pOw_D7tiHSwqcpuWGSwnoKaKWWVaW8ys9SQiOE%3Dw240-h480" alt="Ocean Waves Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">OKYANUS</span></div>
+      <h3>Ocean Waves Simulation</h3>
+      <p>Okyanus dalgaları ve gemiler için yüzdürme fiziği.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.OceanWavesSimulation" target="_blank" rel="noopener noreferrer" aria-label="Ocean Waves Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="water-fluid physics simulation sıvının rengini, boyutunu ve miktarını değiştirerek akışkan fiziğini incele. akişkan">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.WaterFluidPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Water-Fluid Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="WPS"><img src="https://play-lh.googleusercontent.com/3zlZCp0cEOBuyRKE6QaQwN8qDD0d7nVYSlVXqgu-4XSrPwQaaIc4UBGG6syqVgkQfjemSQa8MX8FQ0NjCE9h%3Dw240-h480" alt="Water-Fluid Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">AKIŞKAN</span></div>
+      <h3>Water-Fluid Physics Simulation</h3>
+      <p>Sıvının rengini, boyutunu ve miktarını değiştirerek akışkan fiziğini incele.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.WaterFluidPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Water-Fluid Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="procedural planet algoritmalarla oluşturulan gezegenleri ve arazileri keşfet. prosedürel">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ProceduralPlanet" target="_blank" rel="noopener noreferrer" aria-label="Procedural Planet Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="PP"><img src="https://play-lh.googleusercontent.com/aVcSmHipbaPdhwXIbH5l_yemTTGZmk8k98MIJ55phWDmMr-oi-GGCT09snP4UPePfPmyUgUOzMq1zz7oywh%3Dw240-h480" alt="Procedural Planet uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">PROSEDÜREL</span></div>
+      <h3>Procedural Planet</h3>
+      <p>Algoritmalarla oluşturulan gezegenleri ve arazileri keşfet.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ProceduralPlanet" target="_blank" rel="noopener noreferrer" aria-label="Procedural Planet için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="draw collab arkadaşlarınla aynı tuval üzerinde gerçek zamanlı çizim yap. yaraticilik">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.DrawCollab" target="_blank" rel="noopener noreferrer" aria-label="Draw Collab Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="DC"><img src="https://play-lh.googleusercontent.com/UqqAAk1Ae3iSkFB8v7m2RjRttYari7HPyIrI1Dz03IjvoKePIoEqcQpfLskoZ0WQ8EPdtYjtlL3NrPDtrXZkOA%3Dw240-h480" alt="Draw Collab uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">YARATICILIK</span></div>
+      <h3>Draw Collab</h3>
+      <p>Arkadaşlarınla aynı tuval üzerinde gerçek zamanlı çizim yap.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.DrawCollab" target="_blank" rel="noopener noreferrer" aria-label="Draw Collab için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="electric motor &amp; magnet dc motor, akım ve manyetik alan ilişkisini görselleştir. bi̇li̇m">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ElectricMotorMagnet" target="_blank" rel="noopener noreferrer" aria-label="Electric Motor &amp; Magnet Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="EMM"><img src="https://play-lh.googleusercontent.com/aBIxgcA0lZs32pWd_v5LsX9ssDCC4xEzFZ91TG8AD2RnvDFSLjZrRlXkkMInl0C4YSYfINUb5dSct9LUjE8fMg%3Dw240-h480" alt="Electric Motor &amp; Magnet uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">BİLİM</span></div>
+      <h3>Electric Motor &amp; Magnet</h3>
+      <p>DC motor, akım ve manyetik alan ilişkisini görselleştir.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ElectricMotorMagnet" target="_blank" rel="noopener noreferrer" aria-label="Electric Motor &amp; Magnet için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="cracklez farklı olan şekli bul ve hızlıca dokun. arcade">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.DefaultCompany.Cracklez" target="_blank" rel="noopener noreferrer" aria-label="Cracklez Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="C"><img src="https://play-lh.googleusercontent.com/WKxLtCqK4ZSuMKR752v38y-vtZ2W_MVDhdlL9SU1FKOE33PmSw14u_4CM49xWv7cY8hbxTD72SqUrBT0D0b9Sw%3Dw240-h480" alt="Cracklez uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">ARCADE</span></div>
+      <h3>Cracklez</h3>
+      <p>Farklı olan şekli bul ve hızlıca dokun.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.DefaultCompany.Cracklez" target="_blank" rel="noopener noreferrer" aria-label="Cracklez için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="grass physics simulation etkileşimli çim yüzeyleri ve gerçek zamanlı bitki fiziği. fi̇zi̇k">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.GrassPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Grass Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="GPS"><img src="https://play-lh.googleusercontent.com/xiZWAeWBp4N8F1hwXOkz23p6Os7Cy7wo5lh3u_BUygNTtu5iLvdyLhoGwRci7bduCgv6IGVOPtOq2tdU7mhXWQ%3Dw240-h480" alt="Grass Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">FİZİK</span></div>
+      <h3>Grass Physics Simulation</h3>
+      <p>Etkileşimli çim yüzeyleri ve gerçek zamanlı bitki fiziği.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.GrassPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Grass Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="arena gladiator manager fight gladyatör arenasında savaşçılarını yönet ve mücadele et. aksi̇yon">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.Arena" target="_blank" rel="noopener noreferrer" aria-label="Arena Gladiator Manager Fight Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="AGM"><img src="https://play-lh.googleusercontent.com/uQWMT5rVJPYB0PkH-WDux4Qv_V3M3SQcWt8QDv1-Fmtp1XhMVKp9xbLIHtl4KkhythSa04Z0QJhokT9mq6Xq%3Dw240-h480" alt="Arena Gladiator Manager Fight uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">AKSİYON</span></div>
+      <h3>Arena Gladiator Manager Fight</h3>
+      <p>Gladyatör arenasında savaşçılarını yönet ve mücadele et.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.Arena" target="_blank" rel="noopener noreferrer" aria-label="Arena Gladiator Manager Fight için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="vector math-physics 3d uzayda vektör toplama, çıkarma ve fizik işlemlerini incele. bi̇li̇m">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.VectorMathPhysics" target="_blank" rel="noopener noreferrer" aria-label="Vector Math-Physics Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="VM"><img src="https://play-lh.googleusercontent.com/tTOzyjbc2MYWc8hvXh2NNE6X3bfBi6wLfg4oXG_-1RGPfOTYwqAvYvb2w4n6RpMATRcn4dvu0vcqo10k90Bm%3Dw240-h480" alt="Vector Math-Physics uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">BİLİM</span></div>
+      <h3>Vector Math-Physics</h3>
+      <p>3D uzayda vektör toplama, çıkarma ve fizik işlemlerini incele.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.VectorMathPhysics" target="_blank" rel="noopener noreferrer" aria-label="Vector Math-Physics için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="big bang gpu simulation gpu üzerinde çalışan parçacıklarla kozmik hareketleri simüle et. gpu">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.BigBangGpuSimulation" target="_blank" rel="noopener noreferrer" aria-label="Big Bang GPU Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="BBG"><img src="https://play-lh.googleusercontent.com/ZhO_w9mcpJcz8hAJmyo9D3QBTdEzlLJzDRDauRFSbdwlPX6kvaFSuBItpAzTMYZSW5in783oFLCxpbmU7eEywg%3Dw240-h480" alt="Big Bang GPU Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">GPU</span></div>
+      <h3>Big Bang GPU Simulation</h3>
+      <p>GPU üzerinde çalışan parçacıklarla kozmik hareketleri simüle et.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.BigBangGpuSimulation" target="_blank" rel="noopener noreferrer" aria-label="Big Bang GPU Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="ray tracing rtx holeroll işık, yansıma ve 3d sahne efektleri üzerine grafik deneyi. grafi̇k">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.HoleRoll" target="_blank" rel="noopener noreferrer" aria-label="Ray Tracing RTX HoleRoll Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="RTR"><img src="https://play-lh.googleusercontent.com/nQDGDc76o0F98OWxMpaKWCb6Hoqvbkt-MZ4xvjyJvJ1Kkz1Z57b53ioxuXe-4iJ8znNddKmA2-kfIzPkOYhd%3Dw240-h480" alt="Ray Tracing RTX HoleRoll uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">GRAFİK</span></div>
+      <h3>Ray Tracing RTX HoleRoll</h3>
+      <p>Işık, yansıma ve 3D sahne efektleri üzerine grafik deneyi.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.HoleRoll" target="_blank" rel="noopener noreferrer" aria-label="Ray Tracing RTX HoleRoll için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="spot the real görseller arasında doğru kişiyi bulmaya dayalı dikkat oyunu. casual">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SpotTheReal" target="_blank" rel="noopener noreferrer" aria-label="Spot The Real Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="STR"><img src="https://play-lh.googleusercontent.com/vGfNWPAurzTloweh3LaDRM3hlV2QnUXKbx6yqrc26vA7vGsQwcCXgcaeaH7aO2yKFjpmNcEGTlkqAft0l1Sb%3Dw240-h480" alt="Spot The Real uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">CASUAL</span></div>
+      <h3>Spot The Real</h3>
+      <p>Görseller arasında doğru kişiyi bulmaya dayalı dikkat oyunu.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SpotTheReal" target="_blank" rel="noopener noreferrer" aria-label="Spot The Real için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="snow physics simulation kar yüzeyi ve kış ortamı üzerinde fizik simülasyonu. doğa">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SnowPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Snow Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="SPS"><img src="https://play-lh.googleusercontent.com/nMgu6SRyH2KLHv1uGpvoJbKyrtnC-k1FmeJVGvTlWDID-UhkhaD5fPRhfNTxrhDjUXc0QU8flE785QzmUFx5zw%3Dw240-h480" alt="Snow Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">DOĞA</span></div>
+      <h3>Snow Physics Simulation</h3>
+      <p>Kar yüzeyi ve kış ortamı üzerinde fizik simülasyonu.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SnowPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Snow Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="crazy highway traffic monster canavar araçlarla otoyolda kaotik bir sürüş deneyimi. sürüş">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyHighwayTrafficMonster" target="_blank" rel="noopener noreferrer" aria-label="Crazy Highway Traffic Monster Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CHT"><img src="https://play-lh.googleusercontent.com/vL2kCBTRYY0P1Vd3mpdjvRticsF8SSdEl5FU9Iye9LZn3rRpi5a29FSPeNczr80VGoT4fTF8-coAl07p8mpW%3Dw240-h480" alt="Crazy Highway Traffic Monster uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">SÜRÜŞ</span></div>
+      <h3>Crazy Highway Traffic Monster</h3>
+      <p>Canavar araçlarla otoyolda kaotik bir sürüş deneyimi.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyHighwayTrafficMonster" target="_blank" rel="noopener noreferrer" aria-label="Crazy Highway Traffic Monster için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="water fluid gpu simulation gpu hızlandırmalı akışkan ve su hareketi simülasyonu. gpu">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.WaterFluidGPUSimulation" target="_blank" rel="noopener noreferrer" aria-label="Water Fluid GPU Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="WFG"><img src="https://play-lh.googleusercontent.com/gKZXOfb0LIMIecAOGg3-KHo0WzUOBaFZv-0CG5MM9e62yqfracpQxUnAvCkM0Rs0iU24KreuK3tFW4WPt76KR_s%3Dw240-h480" alt="Water Fluid GPU Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">GPU</span></div>
+      <h3>Water Fluid GPU Simulation</h3>
+      <p>GPU hızlandırmalı akışkan ve su hareketi simülasyonu.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.WaterFluidGPUSimulation" target="_blank" rel="noopener noreferrer" aria-label="Water Fluid GPU Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="height field shallow water arazi oluştur, su ekle ve sığ su dalgalarını gözlemle. su fi̇zi̇ği̇">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.HeightFieldShallowWater" target="_blank" rel="noopener noreferrer" aria-label="Height Field Shallow Water Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="HFS"><img src="https://play-lh.googleusercontent.com/wkxliNKgAX3Rg1yKJkWE1AWOkP5E12OnLOAupi_lO_lqv1LLi3m25hCHEYKSmjVZoO5BELv6mkt0nyxi4TGRVg%3Dw240-h480" alt="Height Field Shallow Water uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">SU FİZİĞİ</span></div>
+      <h3>Height Field Shallow Water</h3>
+      <p>Arazi oluştur, su ekle ve sığ su dalgalarını gözlemle.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.HeightFieldShallowWater" target="_blank" rel="noopener noreferrer" aria-label="Height Field Shallow Water için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="river physics simulation su kaynakları ekleyerek nehir akışını ve su dinamiklerini incele. su fi̇zi̇ği̇">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RiverPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="River Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="RPS"><img src="https://play-lh.googleusercontent.com/EHlnaPBpUY405RyGlK79yQMxQ8cdM3zmS-HGXC24YIuri2EtXG6GZareUztE3WQ6jILQjC2OCdLmaR0l0O4r6A%3Dw240-h480" alt="River Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">SU FİZİĞİ</span></div>
+      <h3>River Physics Simulation</h3>
+      <p>Su kaynakları ekleyerek nehir akışını ve su dinamiklerini incele.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RiverPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="River Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="force-mass-acceleration kuvvet, kütle ve ivme ilişkisini newton’un ikinci yasasıyla keşfet. bi̇li̇m">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ForceMassAcceleration" target="_blank" rel="noopener noreferrer" aria-label="Force-Mass-Acceleration Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="F"><img src="https://play-lh.googleusercontent.com/JXbF3nVtju4hXbXTofh92cZJwdH74M-uggyz80Oey25PjP3vnCRPjlOn3sqCWyHVp_H82je3hdRGwpU1udpmDfY%3Dw240-h480" alt="Force-Mass-Acceleration uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">BİLİM</span></div>
+      <h3>Force-Mass-Acceleration</h3>
+      <p>Kuvvet, kütle ve ivme ilişkisini Newton’un ikinci yasasıyla keşfet.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ForceMassAcceleration" target="_blank" rel="noopener noreferrer" aria-label="Force-Mass-Acceleration için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="infinite world sonsuz dünya fikrini gösteren açık dünya prototipi. dünya">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.InfiniteWorld" target="_blank" rel="noopener noreferrer" aria-label="Infinite World Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="IW"><img src="https://play-lh.googleusercontent.com/9m9hzT0p9JfipLfL7zrTMyOpwPkXssJfxNjcYcazPfZnayntHnKRxJQXzgfzhH6E9ghPIMZZQgr0cBRD1g99%3Dw240-h480" alt="Infinite World uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">DÜNYA</span></div>
+      <h3>Infinite World</h3>
+      <p>Sonsuz dünya fikrini gösteren açık dünya prototipi.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.InfiniteWorld" target="_blank" rel="noopener noreferrer" aria-label="Infinite World için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="crazy basketball shooter atış yönünü ayarla ve fizik tabanlı basketbol şutları dene. basketbol">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyBasketballShooter" target="_blank" rel="noopener noreferrer" aria-label="Crazy Basketball Shooter Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CBS"><img src="https://play-lh.googleusercontent.com/nYJNpYe9jEGXaIbSgZXQ4ky9eVx7wgVf5HEmRs5MF3lzzS3KPA_ZNYtBArFsix47rQl37DlLiNjl-qKQNAqh%3Dw240-h480" alt="Crazy Basketball Shooter uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">BASKETBOL</span></div>
+      <h3>Crazy Basketball Shooter</h3>
+      <p>Atış yönünü ayarla ve fizik tabanlı basketbol şutları dene.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyBasketballShooter" target="_blank" rel="noopener noreferrer" aria-label="Crazy Basketball Shooter için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="big bang physics simulation yerçekimi sabitini, parçacık sayısını ve başlangıç kuvvetini değiştir. fi̇zi̇k">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.BigBangPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Big Bang Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="BBP"><img src="https://play-lh.googleusercontent.com/flfL0ZDjHP9oi_8HrLD9N6USuX0diXpti_efuA5YIL3YMxltHd-HY3zeZ0gbDrbTVfw%3Dw240-h480" alt="Big Bang Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">FİZİK</span></div>
+      <h3>Big Bang Physics Simulation</h3>
+      <p>Yerçekimi sabitini, parçacık sayısını ve başlangıç kuvvetini değiştir.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.BigBangPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Big Bang Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="pirates &amp; forts &amp; ocean waves gemiler, deniz savaşları, kaleler ve yüzdürme fiziği. deni̇z savaşi">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.PiratesFortsOceanWaves" target="_blank" rel="noopener noreferrer" aria-label="Pirates &amp; Forts &amp; Ocean Waves Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="PFO"><img src="https://play-lh.googleusercontent.com/CNFJkeWjJdPjGoucgEP9AEb8nTZ5Xms0geIBaLZ7fDkfGS8DFcl5qdL8yfjWn5D9YQ2rhL8dBaPdH7BLOdPBmw%3Dw240-h480" alt="Pirates &amp; Forts &amp; Ocean Waves uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">DENİZ SAVAŞI</span></div>
+      <h3>Pirates &amp; Forts &amp; Ocean Waves</h3>
+      <p>Gemiler, deniz savaşları, kaleler ve yüzdürme fiziği.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.PiratesFortsOceanWaves" target="_blank" rel="noopener noreferrer" aria-label="Pirates &amp; Forts &amp; Ocean Waves için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="soft body physics simulation jel benzeri yumuşak cisimlere dokunarak fizik davranışlarını dene. fi̇zi̇k">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SoftBodyPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Soft Body Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="SBP"><img src="https://play-lh.googleusercontent.com/b1uWP7Kp6l9WMHYBwWqqQz5eLsQjkKpaF4IMqwgTvGmbJR6t_sjKuUaQM3Cu9GtdU_cRwbWMU-lMrPAiDIjg88A%3Dw240-h480" alt="Soft Body Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">FİZİK</span></div>
+      <h3>Soft Body Physics Simulation</h3>
+      <p>Jel benzeri yumuşak cisimlere dokunarak fizik davranışlarını dene.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.SoftBodyPhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Soft Body Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="matrix view matrix estetiğinde görsel efektler ve refleks odaklı mini oyun. casual">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.MatrixView" target="_blank" rel="noopener noreferrer" aria-label="Matrix View Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="MV"><img src="https://play-lh.googleusercontent.com/zELakQN5WxIilXNVOxlAshs8xynYIwRa7XbGmh8yXh8wj61wF_trVcvvcfh3Gs6fcsvS-uiiAmgIZTTb3Ib-9w%3Dw240-h480" alt="Matrix View uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">CASUAL</span></div>
+      <h3>Matrix View</h3>
+      <p>Matrix estetiğinde görsel efektler ve refleks odaklı mini oyun.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.MatrixView" target="_blank" rel="noopener noreferrer" aria-label="Matrix View için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="my philosophy to understand wo kendi çizimlerimle oluşturduğum iki sahneli, kişisel ve felsefi bir deneyim. deneyi̇m">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.MyDreamVolume1" target="_blank" rel="noopener noreferrer" aria-label="My Philosophy to Understand Wo Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="MPT"><img src="https://play-lh.googleusercontent.com/s__PbecIJgaeZz6MyHWRRbQvgGe_uWE-opmgfcCa47xTbeIYaMmlxx83IQ_GuxQTRW94pkXAh1aiwvTQjH2pZw%3Dw280-h280" alt="My Philosophy to Understand Wo uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">DENEYİM</span></div>
+      <h3>My Philosophy to Understand Wo</h3>
+      <p>Kendi çizimlerimle oluşturduğum iki sahneli, kişisel ve felsefi bir deneyim.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.MyDreamVolume1" target="_blank" rel="noopener noreferrer" aria-label="My Philosophy to Understand Wo için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="castle destroy simulation mancınık fiziğiyle kaleleri yık; kale boyutunu değiştir ve fizik deneylerini izle. yikim fi̇zi̇ği̇">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CastleDestroySimulation" target="_blank" rel="noopener noreferrer" aria-label="Castle Destroy Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CDS"><img src="https://play-lh.googleusercontent.com/XdFBm-gNwMNbuDmB9ihMJF872tY322C8TuBcFibStFd6QQXZDWAqpG0snLD_oSFWMFQkPpSZ30lnuYPTirNw26Q%3Dw240-h480" alt="Castle Destroy Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">YIKIM FİZİĞİ</span></div>
+      <h3>Castle Destroy Simulation</h3>
+      <p>Mancınık fiziğiyle kaleleri yık; kale boyutunu değiştir ve fizik deneylerini izle.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CastleDestroySimulation" target="_blank" rel="noopener noreferrer" aria-label="Castle Destroy Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="eray craft block world bloklarla kendi dünyanı kur, geniş arazileri keşfet ve kaynakları topla. sandbox">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ErayCraft" target="_blank" rel="noopener noreferrer" aria-label="Eray Craft Block World Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="ECB"><img src="https://play-lh.googleusercontent.com/Oj2fLR64awSJgW-0GLIw9g7QUsyu613dq7rSWgiy3bWqew3fVVUoaaHzbwaZsbaj5MBmdhDTrcFaWXeJmxJL%3Dw240-h480" alt="Eray Craft Block World uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">SANDBOX</span></div>
+      <h3>Eray Craft Block World</h3>
+      <p>Bloklarla kendi dünyanı kur, geniş arazileri keşfet ve kaynakları topla.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.ErayCraft" target="_blank" rel="noopener noreferrer" aria-label="Eray Craft Block World için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="simulation" data-search="rope physics simulation farklı sahnelerde dinamik ip davranışlarını ve gerçek zamanlı ip fiziğini dene. i̇p fi̇zi̇ği̇">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RopePhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Rope Physics Simulation Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="RPS"><img src="https://play-lh.googleusercontent.com/_FF_jIGnePaq9B8z6_HL8zbK8EGwAj7qDImVWEOQrcTX96flYYFVCSMaFgqcFeIb--fL_DNEN-t5ipTWIx00jQ%3Dw240-h480" alt="Rope Physics Simulation uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category simulation">SİMÜLASYON</span><span class="card-tag">İP FİZİĞİ</span></div>
+      <h3>Rope Physics Simulation</h3>
+      <p>Farklı sahnelerde dinamik ip davranışlarını ve gerçek zamanlı ip fiziğini dene.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.RopePhysicsSimulation" target="_blank" rel="noopener noreferrer" aria-label="Rope Physics Simulation için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+<article class="app-card" data-category="game" data-search="crazy flying bird kuşunu yönlendir, boşluklardan geç ve puanları topla. arcade">
+  <a class="card-main" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFlyingBird" target="_blank" rel="noopener noreferrer" aria-label="Crazy Flying Bird Google Play sayfasını aç">
+    <div class="app-icon" data-fallback="CFB"><img src="https://play-lh.googleusercontent.com/XgWYDPyrqgkkHEkXN0x4dbA52GvEYhXg1D0F1ylAFHfel7wVIDEyi8P-VMyiv473kQOI3_8pMIoIKbXhS9Yl%3Dw240-h480" alt="Crazy Flying Bird uygulama simgesi" loading="lazy" decoding="async" onerror="this.hidden=true;this.parentElement.classList.add('no-image')"></div>
+    <div class="app-card-text">
+      <div class="card-topline"><span class="card-category game">OYUN</span><span class="card-tag">ARCADE</span></div>
+      <h3>Crazy Flying Bird</h3>
+      <p>Kuşunu yönlendir, boşluklardan geç ve puanları topla.</p>
+    </div>
+  </a>
+  <a class="card-open" href="https://play.google.com/store/apps/details?id=com.SimulationisEvolution.CrazyFlyingBird" target="_blank" rel="noopener noreferrer" aria-label="Crazy Flying Bird için Google Play'i aç"><span>Google Play</span><b aria-hidden="true">↗</b></a>
+</article>
+        </div>
+        <div class="empty-state" id="emptyState">Bu aramayla eşleşen bir proje bulunamadı.</div>
+      </div>
+    </section>
+
+    <section class="section about" id="about">
+      <div class="wrap about-panel">
+        <div class="about-art" aria-hidden="true"><span>EA</span></div>
+        <div>
+          <div class="section-kicker">Geliştirici hakkında</div>
+          <h2>Bağımsız olarak üretiyorum.</h2>
+          <p>Ben Eray Avcı. Android için kendi oyunlarımı ve uygulamalarımı geliştiriyorum. Özellikle fizik sistemleri, gerçek zamanlı simülasyonlar, shader programlama ve mobil performans optimizasyonuyla ilgileniyorum. Bu site, Google Play'de yayınladığım projeleri tek bir yerde topluyor.</p>
+          <div class="about-tags"><span>Independent Developer</span><span>Unity</span><span>Android</span><span>Physics</span><span>Shaders</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact">
+      <div class="wrap contact-panel">
+        <div><div class="section-kicker">Projeleri keşfet</div><h2>Google Play'de buluşalım.</h2><p>Yayınlanan oyunları ve uygulamaları geliştirici profilimde inceleyebilirsin.</p></div>
+        <a class="button" href="https://play.google.com/store/apps/dev?id=6424570969147373272" target="_blank" rel="noopener noreferrer">Google Play profilini aç <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>© <span id="year">2026</span> Eray Avcı. Tüm hakları saklıdır.</span>
+      <div class="footer-links"><a href="https://play.google.com/store/apps/dev?id=6424570969147373272" target="_blank" rel="noopener noreferrer">Google Play</a><a href="mailto:08segant08@gmail.com">İletişim</a></div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const cards = [...document.querySelectorAll('.app-card')];
+      const buttons = [...document.querySelectorAll('.filter-btn')];
+      const search = document.getElementById('projectSearch');
+      const resultCount = document.getElementById('resultCount');
+      const emptyState = document.getElementById('emptyState');
+      let activeFilter = 'all';
+
+      function updateProjects() {
+        const query = search.value.trim().toLocaleLowerCase('tr-TR');
+        let visible = 0;
+        cards.forEach((card) => {
+          const categoryMatch = activeFilter === 'all' || card.dataset.category === activeFilter;
+          const searchMatch = !query || card.dataset.search.toLocaleLowerCase('tr-TR').includes(query);
+          const show = categoryMatch && searchMatch;
+          card.hidden = !show;
+          if (show) visible++;
+        });
+        resultCount.textContent = visible + ' proje gösteriliyor';
+        emptyState.classList.toggle('show', visible === 0);
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeFilter = button.dataset.filter;
+          buttons.forEach((item) => {
+            const selected = item === button;
+            item.classList.toggle('active', selected);
+            item.setAttribute('aria-pressed', String(selected));
+          });
+          updateProjects();
+        });
+      });
+      search.addEventListener('input', updateProjects);
+      document.getElementById('year').textContent = new Date().getFullYear();
+      updateProjects();
+    })();
+  </script>
 </body>
 </html>
